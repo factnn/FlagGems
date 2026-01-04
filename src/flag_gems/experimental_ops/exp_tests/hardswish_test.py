@@ -3,18 +3,6 @@
 import os
 import sys
 
-# Add parent directory to path to import flag_gems
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-try:
-    from tests.accuracy_utils import gems_assert_close
-except ImportError:
-    # Fallback values when running outside pytest
-
-    def gems_assert_close(res, ref, dtype, **kwargs):
-        # Simple fallback comparison
-        torch.testing.assert_close(res, ref, **kwargs)
-
-
 import pytest
 import torch
 import triton
@@ -22,6 +10,17 @@ import triton
 import flag_gems
 from flag_gems.experimental_ops.hardswish import hardswish as gems_hardswish
 from flag_gems.experimental_ops.hardswish import hardswish_out as gems_hardswish_out
+
+# Add parent directory to path to import flag_gems
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+try:
+    from tests.accuracy_utils import gems_assert_close  # noqa: E402
+except ImportError:
+    # Fallback values when running outside pytest
+
+    def gems_assert_close(res, ref, dtype, **kwargs):
+        # Simple fallback comparison
+        torch.testing.assert_close(res, ref, **kwargs)
 
 
 @pytest.mark.hardswish
@@ -54,15 +53,13 @@ def test_hardswish_out(shape, dtype):
         act_ret = gems_hardswish_out(act_x, act_out)
 
     gems_assert_close(act_out, ref_out, dtype=dtype)
-    gems_assert_close(act_ret, ref_out, dtype=dtype)
+    gems_assert_close(act_ret, ref_ret, dtype=dtype)
 
 
 @pytest.mark.hardswish
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (1024, 1024)])
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 def test_hardswish_benchmark_tensor(shape, dtype):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     x = torch.randn(shape, device=flag_gems.device, dtype=dtype)
