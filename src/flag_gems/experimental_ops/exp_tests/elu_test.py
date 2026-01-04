@@ -3,6 +3,16 @@
 import os
 import sys
 
+import pytest
+import torch
+
+import flag_gems
+from flag_gems.experimental_ops.elu import elu as gems_elu
+from flag_gems.experimental_ops.elu import elu_out as gems_elu_out
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+from benchmark.performance_utils import GenericBenchmark  # noqa: E402
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,18 +23,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.elu import elu as gems_elu
-from flag_gems.experimental_ops.elu import elu_out as gems_elu_out
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-from benchmark.performance_utils import GenericBenchmark
 
 
 @pytest.mark.elu
@@ -64,7 +62,7 @@ def test_elu_out(shape, dtype, params):
     with flag_gems.use_gems():
         act_res = gems_elu_out(act_input, alpha, scale, input_scale, act_outbuf)
 
-    gems_assert_close(act_outbuf, ref_outbuf, dtype=dtype)
+    gems_assert_close(act_res, ref_res, dtype=dtype)
 
 
 @pytest.mark.elu

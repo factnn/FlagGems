@@ -3,6 +3,15 @@
 import os
 import sys
 
+import pytest
+import torch
+
+import flag_gems
+from flag_gems.experimental_ops.erf_ import erf_ as gems_erf_
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+from benchmark.performance_utils import GenericBenchmark  # noqa: E402
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -15,23 +24,11 @@ except ImportError:
         torch.testing.assert_close(res, ref, **kwargs)
 
 
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.erf_ import erf_ as gems_erf_
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-from benchmark.performance_utils import GenericBenchmark
-
-
 @pytest.mark.erf_
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 @pytest.mark.parametrize("noncontig", [False, True])
 def test_erf__tensor(shape, dtype, noncontig):
-    device = "cuda"
     if noncontig:
         base = torch.randn(
             (shape[1], shape[0]), device=flag_gems.device, dtype=torch.float32

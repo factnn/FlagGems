@@ -45,9 +45,7 @@ _expand_kernel = expand
 def expand(*args, **kwargs):
     x = args[0]
     size = args[1]
-    implicit = kwargs.get(
-        "implicit", False
-    )  # not used but accepted for signature compatibility
+    kwargs.get("implicit", False)  # not used but accepted for signature compatibility
 
     if not isinstance(size, (list, tuple, torch.Size)):
         raise TypeError("expand size must be a list/tuple/torch.Size of ints")
@@ -82,8 +80,9 @@ def expand(*args, **kwargs):
             target = req
         if src != target and src != 1:
             raise RuntimeError(
-                f"The expanded size of the tensor ({target}) must match the existing size ({src}) at non-singleton "
-                f"dimension {d}. Target sizes must be the same, or -1, or the size of dimension in the original tensor must be 1."
+                f"The expanded size of the tensor ({target}) must match the existing size ({src}) "
+                f"at non-singleton dimension {d}. Target sizes must be the same, or -1, "
+                f"or the size of dimension in the original tensor must be 1."
             )
         out_shape.append(int(target))
 

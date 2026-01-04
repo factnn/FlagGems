@@ -106,7 +106,6 @@ def fft_ifftshift(*args, **kwargs):
         return x.clone()
 
     device = x.device
-    dtype = x.dtype
     out = torch.empty_like(x)
 
     # Prepare metadata
