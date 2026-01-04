@@ -13,6 +13,9 @@ from flag_gems.experimental_ops._upsample_nearest_exact1d import (
 from flag_gems.experimental_ops._upsample_nearest_exact1d import (
     _upsample_nearest_exact1d_out as gems__upsample_nearest_exact1d_out,
 )
+from flag_gems.experimental_ops._upsample_nearest_exact1d import (
+    _upsample_nearest_exact1d_vec as gems__upsample_nearest_exact1d_vec,
+)
 
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
@@ -86,9 +89,7 @@ def test__upsample_nearest_exact1d_vec(shape, dtype, factor, mode):
     )
 
     with flag_gems.use_gems():
-        act_out = torch.ops.aten._upsample_nearest_exact1d.vec(
-            x, output_size, scale_factors
-        )
+        act_out = gems__upsample_nearest_exact1d_vec(x, output_size, scale_factors)
 
     gems_assert_close(act_out, ref_out, dtype=dtype)
 
@@ -197,9 +198,7 @@ def test__upsample_nearest_exact1d_vec_performance(shape, dtype, factor, mode):
     # Triton implementation
     with flag_gems.use_gems():
         ms_triton, _, _ = triton.testing.do_bench(
-            lambda: torch.ops.aten._upsample_nearest_exact1d.vec(
-                x, output_size, scale_factors
-            ),
+            lambda: gems__upsample_nearest_exact1d_vec(x, output_size, scale_factors),
             rep=100,
             quantiles=quantiles,
         )
