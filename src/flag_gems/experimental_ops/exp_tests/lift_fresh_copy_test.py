@@ -5,6 +5,7 @@ import sys
 
 import pytest
 import torch
+import triton
 
 import flag_gems
 from flag_gems.experimental_ops.lift_fresh_copy import (
