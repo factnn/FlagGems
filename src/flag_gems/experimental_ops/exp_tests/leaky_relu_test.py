@@ -3,10 +3,17 @@
 import os
 import sys
 
+import pytest
+import torch
+
+import flag_gems
+from flag_gems.experimental_ops.leaky_relu import leaky_relu as gems_leaky_relu
+from flag_gems.experimental_ops.leaky_relu import leaky_relu_out as gems_leaky_relu_out
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
-    from tests.accuracy_utils import gems_assert_close
+    from tests.accuracy_utils import gems_assert_close  # noqa: E402
 except ImportError:
     # Fallback values when running outside pytest
 
@@ -15,16 +22,7 @@ except ImportError:
         torch.testing.assert_close(res, ref, **kwargs)
 
 
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.leaky_relu import leaky_relu as gems_leaky_relu
-from flag_gems.experimental_ops.leaky_relu import leaky_relu_out as gems_leaky_relu_out
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-from benchmark.performance_utils import GenericBenchmark
+from benchmark.performance_utils import GenericBenchmark  # noqa: E402
 
 
 @pytest.mark.leaky_relu

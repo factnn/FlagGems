@@ -3,24 +3,22 @@
 import os
 import sys
 
+import pytest
+import torch
+
+import flag_gems
+from flag_gems.experimental_ops.i0_ import i0_ as gems_i0_
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
-    from tests.accuracy_utils import gems_assert_close
+    from tests.accuracy_utils import gems_assert_close  # noqa: E402
 except ImportError:
     # Fallback values when running outside pytest
 
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.i0_ import i0_ as gems_i0_
 
 
 @pytest.mark.i0_
