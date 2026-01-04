@@ -3,6 +3,14 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.stack import stack as gems_stack
+from flag_gems.experimental_ops.stack import stack_out as gems_stack_out
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,15 +21,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.stack import stack as gems_stack
-from flag_gems.experimental_ops.stack import stack_out as gems_stack_out
 
 
 @pytest.mark.stack
@@ -74,8 +73,6 @@ def test_stack_out(shape, dtype, num_tensors, dim):
 @pytest.mark.parametrize("num_tensors", [2, 3, 5])
 @pytest.mark.parametrize("dim", [0, 1, -1])
 def test_stack_benchmark_tensor(shape, dtype, num_tensors, dim):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     tensors = [

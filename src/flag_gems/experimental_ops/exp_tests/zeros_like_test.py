@@ -3,6 +3,14 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.zeros_like import zeros_like as gems_zeros_like
+from flag_gems.experimental_ops.zeros_like import zeros_like_out as gems_zeros_like_out
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,15 +21,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.zeros_like import zeros_like as gems_zeros_like
-from flag_gems.experimental_ops.zeros_like import zeros_like_out as gems_zeros_like_out
 
 
 @pytest.mark.zeros_like
@@ -106,8 +105,6 @@ def test_zeros_like_out_overload(shape, in_dtype, out_dtype, memfmt_case):
     ["none", "dtype_override", "contig_memfmt", "channels_last", "layout_device"],
 )
 def test_zeros_like_default_overload_performance(shape, in_dtype, opts_case):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     inp = torch.randn(shape, dtype=in_dtype, device=flag_gems.device)

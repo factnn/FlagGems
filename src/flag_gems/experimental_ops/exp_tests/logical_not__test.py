@@ -3,6 +3,13 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.logical_not_ import logical_not_ as gems_logical_not_
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,14 +20,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.logical_not_ import logical_not_ as gems_logical_not_
 
 
 @pytest.mark.logical_not_
@@ -51,8 +50,6 @@ def test_logical_not__tensor(shape, dtype, contig):
 @pytest.mark.parametrize("dtype", [torch.bool])
 @pytest.mark.parametrize("contig", [True, False])
 def test_logical_not__benchmark_tensor(shape, dtype, contig):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     if contig:

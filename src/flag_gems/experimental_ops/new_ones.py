@@ -118,12 +118,13 @@ def new_ones(*args, **kwargs):
 
 
 def new_ones_out(*args, **kwargs):
-    # Expected schema (aten): new_ones.out(Tensor self, int[] size, *, dtype?, layout?, device?, pin_memory?, Tensor(a!) out) -> Tensor(a!)
+    # Expected schema (aten): new_ones.out(Tensor self, int[] size, *, dtype?,
+    # layout?, device?, pin_memory?, Tensor(a!) out) -> Tensor(a!)
     if len(args) == 0:
         raise TypeError(
             "new_ones_out expects at least a 'self' tensor as the first argument."
         )
-    self = args[0]
+    _ = args[0]  # self parameter (unused but required by schema)  # noqa: F841
     # Determine 'out' tensor (either in kwargs or as the last positional argument)
     out = kwargs.get("out", None)
     pos_after_self = list(args[1:])

@@ -32,7 +32,7 @@ def pixel_unshuffle_kernel(
     sN_out = C_out * H_out * W_out
     sC_out = H_out * W_out
     sH_out = W_out
-    sW_out = 1
+    # sW_out = 1  # unused
 
     # Decode output linear index into (n, c_out, h_out, w_out)
     n = offsets // sN_out

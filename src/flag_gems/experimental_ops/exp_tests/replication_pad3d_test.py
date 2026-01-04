@@ -3,18 +3,6 @@
 import os
 import sys
 
-# Add parent directory to path to import flag_gems
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-try:
-    from tests.accuracy_utils import gems_assert_close
-except ImportError:
-    # Fallback values when running outside pytest
-
-    def gems_assert_close(res, ref, dtype, **kwargs):
-        # Simple fallback comparison
-        torch.testing.assert_close(res, ref, **kwargs)
-
-
 import pytest
 import torch
 import triton
@@ -26,6 +14,17 @@ from flag_gems.experimental_ops.replication_pad3d import (
 from flag_gems.experimental_ops.replication_pad3d import (
     replication_pad3d_out as gems_replication_pad3d_out,
 )
+
+# Add parent directory to path to import flag_gems
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+try:
+    from tests.accuracy_utils import gems_assert_close
+except ImportError:
+    # Fallback values when running outside pytest
+
+    def gems_assert_close(res, ref, dtype, **kwargs):
+        # Simple fallback comparison
+        torch.testing.assert_close(res, ref, **kwargs)
 
 
 @pytest.mark.replication_pad3d
@@ -82,8 +81,6 @@ def test_replication_pad3d_out(shape, dtype, padding):
     "padding", [(0, 0, 0, 0, 0, 0), (1, 1, 1, 1, 1, 1), (2, 0, 1, 2, 0, 1)]
 )
 def test_replication_pad3d_benchmark_tensor(shape, dtype, padding):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     x = torch.randn(shape, dtype=dtype, device=flag_gems.device)

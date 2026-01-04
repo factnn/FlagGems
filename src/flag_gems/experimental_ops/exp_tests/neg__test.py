@@ -3,24 +3,23 @@
 import os
 import sys
 
-# Add parent directory to path to import flag_gems
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-try:
-    from tests.accuracy_utils import gems_assert_close
-except ImportError:
-    # Fallback values when running outside pytest
-
-    def gems_assert_close(res, ref, dtype, **kwargs):
-        # Simple fallback comparison
-        torch.testing.assert_close(res, ref, **kwargs)
-
-
 import pytest
 import torch
 import triton
 
 import flag_gems
 from flag_gems.experimental_ops.neg_ import neg_ as gems_neg_
+
+# Add parent directory to path to import flag_gems
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+try:
+    from tests.accuracy_utils import gems_assert_close  # noqa: E402
+except ImportError:
+    # Fallback values when running outside pytest
+
+    def gems_assert_close(res, ref, dtype, **kwargs):
+        # Simple fallback comparison
+        torch.testing.assert_close(res, ref, **kwargs)
 
 
 @pytest.mark.neg_
@@ -42,8 +41,6 @@ def test_neg__tensor(shape, dtype):
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (1024, 1024)])
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 def test_neg__benchmark_tensor(shape, dtype):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     input_tensor = torch.randn(shape, dtype=dtype, device=flag_gems.device)

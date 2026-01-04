@@ -3,6 +3,14 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.log2 import log2 as gems_log2
+from flag_gems.experimental_ops.log2 import log2_out as gems_log2_out
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,15 +21,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.log2 import log2 as gems_log2
-from flag_gems.experimental_ops.log2 import log2_out as gems_log2_out
 
 
 @pytest.mark.log2
@@ -60,8 +59,6 @@ def test_log2_out(shape, dtype):
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 def test_log2_benchmark_tensor(shape, dtype):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     input_tensor = torch.rand(shape, dtype=dtype, device=flag_gems.device) + 0.1

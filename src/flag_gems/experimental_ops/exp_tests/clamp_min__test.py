@@ -8,6 +8,9 @@ import torch
 
 import flag_gems
 from flag_gems.experimental_ops.clamp_min_ import clamp_min_ as gems_clamp_min_
+from flag_gems.experimental_ops.clamp_min_ import (
+    clamp_min__Tensor as gems_clamp_min__Tensor,
+)
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 from benchmark.performance_utils import GenericBenchmark  # noqa: E402
@@ -55,7 +58,7 @@ def test_clamp_min__tensor(shape, dtype):
 
     ref_out = torch.ops.aten.clamp_min_.Tensor(ref_inp, ref_min)
     with flag_gems.use_gems():
-        act_out = torch.ops.aten.clamp_min_.Tensor(act_inp, act_min)
+        act_out = gems_clamp_min__Tensor(act_inp, act_min)
 
     gems_assert_close(act_out, ref_out, dtype=dtype)
 

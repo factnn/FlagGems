@@ -3,6 +3,15 @@
 import os
 import sys
 
+import pytest
+import torch
+
+import flag_gems
+from flag_gems.experimental_ops.zero_ import zero_ as gems_zero_
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+from benchmark.performance_utils import GenericBenchmark  # noqa: E402
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,17 +22,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.zero_ import zero_ as gems_zero_
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-from benchmark.performance_utils import GenericBenchmark
 
 
 @pytest.mark.zero_

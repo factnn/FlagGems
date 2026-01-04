@@ -13,11 +13,11 @@ def softshrink_kernel(x_ptr, out_ptr, n_elements, lambd, BLOCK_SIZE: tl.constexp
     x = tl.load(x_ptr + offsets, mask=mask, other=0)
     x32 = x.to(tl.float32)
 
-    l = lambd  # scalar float32
+    lambda_val = lambd  # scalar float32
 
-    gt = x32 > l
-    lt = x32 < -l
-    res32 = tl.where(gt, x32 - l, tl.where(lt, x32 + l, 0.0))
+    gt = x32 > lambda_val
+    lt = x32 < -lambda_val
+    res32 = tl.where(gt, x32 - lambda_val, tl.where(lt, x32 + lambda_val, 0.0))
 
     # Propagate NaN: if x is NaN, keep it
     res32 = tl.where(x32 != x32, x32, res32)

@@ -93,7 +93,6 @@ def tril_(*args, **kwargs):
 
     # Compute per-batch base offsets (in elements) from original strides
     device = x.device
-    dtype = x.dtype
     strides = x.stride()
     stride_m = int(x.stride(-2))
     stride_n = int(x.stride(-1))

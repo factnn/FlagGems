@@ -3,18 +3,6 @@
 import os
 import sys
 
-# Add parent directory to path to import flag_gems
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
-try:
-    from tests.accuracy_utils import gems_assert_close
-except ImportError:
-    # Fallback values when running outside pytest
-
-    def gems_assert_close(res, ref, dtype, **kwargs):
-        # Simple fallback comparison
-        torch.testing.assert_close(res, ref, **kwargs)
-
-
 import pytest
 import torch
 import triton
@@ -26,6 +14,17 @@ from flag_gems.experimental_ops.select_backward import (
 from flag_gems.experimental_ops.select_backward import (
     select_backward_out as gems_select_backward_out,
 )
+
+# Add parent directory to path to import flag_gems
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
+try:
+    from tests.accuracy_utils import gems_assert_close
+except ImportError:
+    # Fallback values when running outside pytest
+
+    def gems_assert_close(res, ref, dtype, **kwargs):
+        # Simple fallback comparison
+        torch.testing.assert_close(res, ref, **kwargs)
 
 
 @pytest.mark.select_backward
@@ -98,8 +97,6 @@ def test_select_backward_out(input_sizes, dim, index_mode, dtype):
 @pytest.mark.parametrize("index_mode", ["first", "mid", "neg1"])
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 def test_select_backward_default_performance(input_sizes, dim, index_mode, dtype):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     ndim = len(input_sizes)

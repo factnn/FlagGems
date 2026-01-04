@@ -40,8 +40,10 @@ def _normalize_dim(dim: int, ndim: int) -> int:
     if dim < 0:
         dim += ndim
     if dim < 0 or dim >= ndim:
+        dim_offset = dim - (ndim if dim < 0 else 0)
         raise IndexError(
-            f"Dimension out of range (expected to be in range of [{-ndim}, {ndim-1}], but got {dim - (ndim if dim < 0 else 0)})"
+            f"Dimension out of range (expected to be in range of "
+            f"[{-ndim}, {ndim-1}], but got {dim_offset})"
         )
     return dim
 

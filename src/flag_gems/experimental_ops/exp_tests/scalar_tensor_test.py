@@ -3,6 +3,16 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.scalar_tensor import scalar_tensor as gems_scalar_tensor
+from flag_gems.experimental_ops.scalar_tensor import (
+    scalar_tensor_out as gems_scalar_tensor_out,
+)
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,17 +23,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.scalar_tensor import scalar_tensor as gems_scalar_tensor
-from flag_gems.experimental_ops.scalar_tensor import (
-    scalar_tensor_out as gems_scalar_tensor_out,
-)
 
 
 @pytest.mark.scalar_tensor

@@ -3,6 +3,14 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.triu import triu as gems_triu
+from flag_gems.experimental_ops.triu import triu_out as gems_triu_out
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,15 +21,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.triu import triu as gems_triu
-from flag_gems.experimental_ops.triu import triu_out as gems_triu_out
 
 
 @pytest.mark.triu
@@ -63,8 +62,6 @@ def test_triu_out(shape, dtype, diagonal):
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 @pytest.mark.parametrize("diagonal", [-1, 0, 1, 3])
 def test_triu_benchmark_tensor(shape, dtype, diagonal):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     x = torch.randn(shape, dtype=dtype, device=flag_gems.device)

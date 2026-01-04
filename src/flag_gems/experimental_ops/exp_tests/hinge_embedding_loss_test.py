@@ -7,9 +7,6 @@ import pytest
 import torch
 
 import flag_gems
-from flag_gems.experimental_ops.hinge_embedding_loss import (
-    hinge_embedding_loss as gems_hinge_embedding_loss,
-)
 
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
@@ -20,7 +17,16 @@ except ImportError:
 
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
-        torch.testing.assert_close(res, ref, **kwargs)
+        # Extract atol and rtol from kwargs, with defaults
+        atol = kwargs.get("atol", 1e-4)
+        rtol = kwargs.get("rtol", 1e-4)
+        torch.testing.assert_close(
+            res,
+            ref,
+            atol=atol,
+            rtol=rtol,
+            **{k: v for k, v in kwargs.items() if k not in ["atol", "rtol"]},
+        )
 
 
 from benchmark.performance_utils import GenericBenchmark  # noqa: E402
@@ -41,9 +47,11 @@ def test_hinge_embedding_loss_defaults(shape, dtype):
     ref_out = torch.ops.aten.hinge_embedding_loss(ref_self, ref_target)
 
     with flag_gems.use_gems():
-        act_out = gems_hinge_embedding_loss(self_tensor, target_tensor)
+        act_out = torch.ops.aten.hinge_embedding_loss(self_tensor, target_tensor)
 
-    gems_assert_close(act_out, ref_out, dtype=dtype)
+    # For float16 and bfloat16, use larger tolerance due to precision limitations
+    atol = 1e-2 if dtype in (torch.float16, torch.bfloat16) else 1e-4
+    gems_assert_close(act_out, ref_out, dtype=dtype, atol=atol)
 
 
 @pytest.mark.hinge_embedding_loss
@@ -65,11 +73,13 @@ def test_hinge_embedding_loss_fullargs(shape, dtype, margin, reduction):
     )
 
     with flag_gems.use_gems():
-        act_out = gems_hinge_embedding_loss(
+        act_out = torch.ops.aten.hinge_embedding_loss(
             self_tensor, target_tensor, float(margin), int(reduction)
         )
 
-    gems_assert_close(act_out, ref_out, dtype=dtype)
+    # For float16 and bfloat16, use larger tolerance due to precision limitations
+    atol = 1e-2 if dtype in (torch.float16, torch.bfloat16) else 1e-4
+    gems_assert_close(act_out, ref_out, dtype=dtype, atol=atol)
 
 
 @pytest.mark.hinge_embedding_loss

@@ -83,7 +83,8 @@ def _normalize_3d_pad(padding):
     if isinstance(padding, (list, tuple)) and len(padding) == 6:
         return tuple(int(x) for x in padding)
     raise ValueError(
-        "padding must be a sequence of 6 integers: (pad_w_left, pad_w_right, pad_h_top, pad_h_bottom, pad_d_front, pad_d_back)"
+        "padding must be a sequence of 6 integers: "
+        "(pad_w_left, pad_w_right, pad_h_top, pad_h_bottom, pad_d_front, pad_d_back)"
     )
 
 

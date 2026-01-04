@@ -3,6 +3,16 @@
 import os
 import sys
 
+import pytest
+import torch
+import triton
+
+import flag_gems
+from flag_gems.experimental_ops.transpose_copy import (
+    transpose_copy_int,
+    transpose_copy_int_out,
+)
+
 # Add parent directory to path to import flag_gems
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../.."))
 try:
@@ -13,17 +23,6 @@ except ImportError:
     def gems_assert_close(res, ref, dtype, **kwargs):
         # Simple fallback comparison
         torch.testing.assert_close(res, ref, **kwargs)
-
-
-import pytest
-import torch
-import triton
-
-import flag_gems
-from flag_gems.experimental_ops.transpose_copy import (
-    transpose_copy_int,
-    transpose_copy_int_out,
-)
 
 
 @pytest.mark.transpose_copy
@@ -72,8 +71,6 @@ def test_transpose_copy_int_out(shape, dtype, dims):
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
 @pytest.mark.parametrize("dims", [(0, 1), (1, 0)])
 def test_transpose_copy_int_performance(shape, dtype, dims):
-    import torch.utils.benchmark as benchmark
-
     quantiles = [0.5, 0.2, 0.8]
 
     inp = torch.randn(shape, dtype=dtype, device=flag_gems.device)

@@ -92,7 +92,8 @@ def zeros_like(*args, **kwargs):
 
 
 def zeros_like_out(*args, **kwargs):
-    # Expected signature: zeros_like.out(input, *, dtype=None, layout=None, device=None, pin_memory=None, memory_format=None, out)
+    # Expected signature: zeros_like.out(input, *, dtype=None, layout=None,
+    # device=None, pin_memory=None, memory_format=None, out)
     # Extract input and out tensors
     inp = None
     if len(args) >= 1:
