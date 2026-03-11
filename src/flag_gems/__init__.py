@@ -370,6 +370,8 @@ _FULL_CONFIG = (
     ("vstack", vstack),
     ("where.self", where_self),
     ("where.self_out", where_self_out),
+    ("zero", zero),
+    ("zero.out", zero_out),
     ("zeros", zeros),
     ("zero_", zero_),
     ("zeros_like", zeros_like),

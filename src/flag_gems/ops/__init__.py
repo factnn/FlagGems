@@ -256,6 +256,7 @@ from flag_gems.ops.where import (
     where_self,
     where_self_out,
 )
+from flag_gems.ops.zero import zero, zero_out
 from flag_gems.ops.zeros import zero_, zeros
 from flag_gems.ops.zeros_like import zeros_like
 
@@ -579,6 +580,8 @@ __all__ = [
     "where_scalar_self",
     "where_self",
     "where_self_out",
+    "zero",
+    "zero_out",
     "zeros",
     "zero_",
     "zeros_like",
