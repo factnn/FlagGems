@@ -201,6 +201,7 @@ _FULL_CONFIG = (
     ("kron", kron),
     ("le.Scalar", le_scalar),
     ("le.Tensor", le),
+    ("lift_fresh_copy", lift_fresh_copy),
     ("lerp.Scalar", lerp_scalar),
     ("lerp.Tensor", lerp_tensor),
     ("lerp_.Scalar", lerp_scalar_),
