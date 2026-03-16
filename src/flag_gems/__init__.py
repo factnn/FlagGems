@@ -50,6 +50,7 @@ _FULL_CONFIG = (
     ("abs_", abs_),
     ("absolute", absolute),
     ("acos", acos),
+    ("arcsinh", arcsinh),
     ("add.Tensor", add),
     ("add_.Tensor", add_),
     ("addcdiv", addcdiv),
