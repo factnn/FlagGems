@@ -8,7 +8,7 @@ import torch
 import torch.nn.functional as F
 
 import flag_gems
-from benchmark.attri_util import BenchLevel, FLOAT_DTYPES
+from benchmark.attri_util import FLOAT_DTYPES, BenchLevel
 from benchmark.performance_utils import (
     Benchmark,
     Config,
