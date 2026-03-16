@@ -167,7 +167,6 @@ from flag_gems.ops.per_token_group_quant_fp8 import (
     per_token_group_quant_fp8,
 )
 from flag_gems.ops.polar import polar
-from flag_gems.ops.prelu import prelu
 from flag_gems.ops.pow import (
     pow_scalar,
     pow_tensor_scalar,
@@ -175,6 +174,7 @@ from flag_gems.ops.pow import (
     pow_tensor_tensor,
     pow_tensor_tensor_,
 )
+from flag_gems.ops.prelu import prelu
 from flag_gems.ops.prod import prod, prod_dim
 from flag_gems.ops.quantile import quantile
 from flag_gems.ops.rand import rand
