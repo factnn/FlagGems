@@ -1206,6 +1206,17 @@ def test_perf_lift_fresh_copy():
         ),
         op_name="lift_fresh_copy",
         torch_op=torch.ops.aten.lift_fresh_copy,
+@pytest.mark.soft_margin_loss
+def test_perf_soft_margin_loss():
+    def soft_margin_loss_input_fn(shape, dtype, device):
+        inp = torch.randn(shape, dtype=dtype, device=device)
+        target = (torch.randint(0, 2, shape, device=device).to(dtype) * 2) - 1
+        yield inp, target
+
+    bench = GenericBenchmark(
+        input_fn=soft_margin_loss_input_fn,
+        op_name="soft_margin_loss",
+        torch_op=torch.ops.aten.soft_margin_loss,
         dtypes=FLOAT_DTYPES,
     )
     bench.run()
