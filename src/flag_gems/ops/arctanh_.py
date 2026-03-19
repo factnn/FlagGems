@@ -7,7 +7,7 @@ from flag_gems.runtime import torch_device_fn
 
 
 @triton.jit
-def arctanh__kernel(
+def arctanh_kernel(
     x_ptr, n_elements, BLOCK_SIZE: tl.constexpr, COMPUTE_IN_FP32: tl.constexpr
 ):
     pid = tl.program_id(axis=0)
@@ -34,6 +34,7 @@ def arctanh__kernel(
 
 
 def arctanh_(*args, **kwargs):
+    # Extract the input tensor; accept positional or keywords like 'input' or 'self'
     x = None
     if len(args) >= 1 and isinstance(args[0], torch.Tensor):
         x = args[0]
@@ -55,5 +56,5 @@ def arctanh_(*args, **kwargs):
 
     grid = lambda meta: (triton.cdiv(n_elements, meta["BLOCK_SIZE"]),)
     with torch_device_fn.device(x.device):
-        arctanh__kernel[grid](x, n_elements, BLOCK_SIZE=1024, COMPUTE_IN_FP32=use_fp32)
+        arctanh_kernel[grid](x, n_elements, BLOCK_SIZE=1024, COMPUTE_IN_FP32=use_fp32)
     return x
