@@ -62,9 +62,8 @@ def tril(input: torch.Tensor, diagonal: int = 0):
 def tril_out(input: torch.Tensor, diagonal: int = 0, out: torch.Tensor = None):
     if out is None:
         out = torch.empty_like(input)
-    else:
-        assert out.shape == input.shape, "Input and output must have the same shape"
-        assert out.dtype == input.dtype, "Input and output must have the same dtype"
+    assert out.shape == input.shape, "Input and output must have the same shape"
+    assert out.dtype == input.dtype, "Input and output must have the same dtype"
     result = tril(input, diagonal)
     out.copy_(result)
     return out
