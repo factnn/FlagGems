@@ -7,7 +7,7 @@ from flag_gems.runtime import torch_device_fn
 
 
 @triton.jit
-def selu__kernel(x_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
+def selu_kernel(x_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
     pid = tl.program_id(axis=0)
     block_start = pid * BLOCK_SIZE
     offsets = block_start + tl.arange(0, BLOCK_SIZE)
@@ -51,5 +51,5 @@ def selu_(*args, **kwargs):
     BLOCK_SIZE = 1024
     grid = lambda meta: (triton.cdiv(n_elements, meta["BLOCK_SIZE"]),)
     with torch_device_fn.device(x.device):
-        selu__kernel[grid](x, n_elements, BLOCK_SIZE=BLOCK_SIZE)
+        selu_kernel[grid](x, n_elements, BLOCK_SIZE=BLOCK_SIZE)
     return x
