@@ -7,7 +7,7 @@ from flag_gems.runtime import torch_device_fn
 
 
 @triton.jit
-def hardswish__kernel_(x_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
+def hardswish_kernel_(x_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
     pid = tl.program_id(axis=0)
     block_start = pid * BLOCK_SIZE
     offsets = block_start + tl.arange(0, BLOCK_SIZE)
@@ -51,7 +51,7 @@ def hardswish_(*args, **kwargs):
     grid = lambda meta: (triton.cdiv(n_elements, meta["BLOCK_SIZE"]),)
 
     with torch_device_fn.device(x_work.device):
-        hardswish__kernel_[grid](x_work, n_elements, BLOCK_SIZE=BLOCK_SIZE)
+        hardswish_kernel_[grid](x_work, n_elements, BLOCK_SIZE=BLOCK_SIZE)
 
     if x_work.data_ptr() != orig.data_ptr():
         orig.copy_(x_work)
