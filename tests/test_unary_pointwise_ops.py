@@ -1491,6 +1491,8 @@ def test_accuracy_absolute(shape, dtype):
     with flag_gems.use_gems():
         res_out = torch.absolute(inp)
     gems_assert_equal(res_out, ref_out)
+
+
 @pytest.mark.inplace
 @pytest.mark.log1p_
 @pytest.mark.parametrize("shape", POINTWISE_SHAPES)
