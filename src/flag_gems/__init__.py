@@ -173,6 +173,7 @@ _FULL_CONFIG = (
     ("floor_divide_.Scalar", floor_divide_),
     ("floor_divide_.Tensor", floor_divide_),
     ("fmin", fmin),
+    ("fmin.out", fmin_out),
     ("full", full),
     ("full_like", full_like),
     ("gather", gather),
