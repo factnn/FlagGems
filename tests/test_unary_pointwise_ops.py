@@ -1335,6 +1335,15 @@ def test_accuracy__functional_sym_constrain_range_for_size(shape, dtype):
         res_out = torch.ops.aten._functional_sym_constrain_range_for_size(
             5, 1, 10, dep_token
         )
+@pytest.mark.absolute
+@pytest.mark.parametrize("shape", POINTWISE_SHAPES)
+@pytest.mark.parametrize("dtype", FLOAT_DTYPES)
+def test_accuracy_absolute(shape, dtype):
+    inp = torch.randn(shape, dtype=dtype, device=flag_gems.device)
+    ref_inp = to_reference(inp)
+    ref_out = torch.absolute(ref_inp)
+    with flag_gems.use_gems():
+        res_out = torch.absolute(inp)
     gems_assert_equal(res_out, ref_out)
 
 
