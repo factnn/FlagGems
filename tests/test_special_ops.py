@@ -2140,6 +2140,8 @@ def test_accuracy_lift_fresh_copy(shape, dtype):
     with flag_gems.use_gems():
         res_out = torch.ops.aten.lift_fresh_copy(inp)
     gems_assert_close(res_out, ref_out, dtype)
+
+
 @pytest.mark.t_copy
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
