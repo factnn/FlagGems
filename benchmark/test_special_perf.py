@@ -1206,6 +1206,11 @@ def test_perf_lift_fresh_copy():
         ),
         op_name="lift_fresh_copy",
         torch_op=torch.ops.aten.lift_fresh_copy,
+        dtypes=FLOAT_DTYPES,
+    )
+    bench.run()
+
+
 @pytest.mark.margin_ranking_loss
 def test_perf_margin_ranking_loss():
     def margin_ranking_loss_input_fn(shape, dtype, device):
