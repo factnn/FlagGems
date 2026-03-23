@@ -363,6 +363,8 @@ def test_accuracy_arange(end, dtype):
         res_out = torch.arange(end, dtype=dtype, device=device)
     ref_out = torch.arange(end, dtype=dtype, device="cpu")
     gems_assert_equal(res_out.cpu(), ref_out)
+
+
 @pytest.mark.zero
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
