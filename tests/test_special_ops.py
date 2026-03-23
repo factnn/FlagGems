@@ -2316,6 +2316,8 @@ def test_accuracy_lift_fresh_copy(shape, dtype):
     ref_out = torch.ops.aten.lift_fresh_copy(ref_inp)
     with flag_gems.use_gems():
         res_out = torch.ops.aten.lift_fresh_copy(inp)
+
+
 @pytest.mark.soft_margin_loss
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
