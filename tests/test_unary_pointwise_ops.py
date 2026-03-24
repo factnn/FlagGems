@@ -2153,6 +2153,8 @@ def test_accuracy_floor_(shape, dtype):
         res_out = inp.floor_()
 
     gems_assert_equal(res_out, ref_out)
+
+
 @pytest.mark.special_i0e
 @pytest.mark.parametrize("shape", [(2, 3), (128, 256), (512, 512)])
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
