@@ -1770,6 +1770,8 @@ def test_accuracy_asinh_(shape, dtype):
     ref_out = ref_inp.asinh_()
     with flag_gems.use_gems():
         res_out = inp.asinh_()
+
+
 @pytest.mark.arcsinh_
 @pytest.mark.parametrize("shape", POINTWISE_SHAPES)
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
