@@ -22,10 +22,6 @@ def _alias_copy_kernel(src_ptr, dst_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
 
 def alias_copy(x: torch.Tensor):
     logger.debug("GEMS ALIAS_COPY")
-    """
-    Wrapper for aten::alias_copy
-    Creates and returns a copy of `x` with identical content.
-    """
     out = torch.empty_like(x)
     n_elements = out.numel()
     if n_elements == 0:
@@ -44,10 +40,6 @@ def alias_copy(x: torch.Tensor):
 
 def alias_copy_out(x: torch.Tensor, out: torch.Tensor):
     logger.debug("GEMS ALIAS_COPY_OUT")
-    """
-    Wrapper for aten::alias_copy.out
-    Copies `x` into `out` and returns `out`.
-    """
     if x.dtype != out.dtype:
         raise RuntimeError("alias_copy_out: dtype of input and output must match.")
     if x.numel() != out.numel():
