@@ -1549,6 +1549,7 @@ def test_accuracy_rrelu_with_noise_backward(shape, dtype):
         res_out = torch.ops.aten.rrelu_with_noise_backward(
             grad_output, inp, noise, lower, upper, True, False
         )
+    gems_assert_close(res_out, ref_out, dtype)
 
 
 @pytest.mark.inplace
@@ -1568,7 +1569,6 @@ def test_accuracy_logit_(shape, dtype):
     gems_assert_close(res_out, ref_out, dtype)
 
 
-<<<<<<< HEAD
 @pytest.mark.logit
 @pytest.mark.parametrize("shape", POINTWISE_SHAPES)
 @pytest.mark.parametrize("dtype", FLOAT_DTYPES)
@@ -1584,8 +1584,6 @@ def test_accuracy_logit(shape, dtype):
         res_out = torch.logit(inp, eps=1e-6)
     gems_assert_close(res_out, ref_out, dtype)
 
-=======
->>>>>>> 6f99e9d7 (fix: add missing blank lines in test_unary_pointwise_ops.py)
 
 @pytest.mark.to_copy
 @pytest.mark.parametrize("shape", POINTWISE_SHAPES)
