@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 @triton.jit
-def _safe_softmax(input_ptr, output_ptr, n_rows, n_cols, BLOCK_SIZE: tl.constexpr):
+def _safe_softmax_kernel(input_ptr, output_ptr, n_rows, n_cols, BLOCK_SIZE: tl.constexpr):
     row_id = tl.program_id(0)
     cols = tl.arange(0, BLOCK_SIZE)
     mask = cols < n_cols
@@ -29,10 +29,6 @@ def _safe_softmax(input_ptr, output_ptr, n_rows, n_cols, BLOCK_SIZE: tl.constexp
     softmax = tl.where(all_neginf, tl.zeros([BLOCK_SIZE], dtype=tl.float32), softmax)
 
     tl.store(output_ptr + row_offset + cols, softmax, mask=mask)
-
-
-# Preserve kernel handle before defining wrapper with the same name
-_safe_softmax_kernel = _safe_softmax
 
 
 def _safe_softmax(x: torch.Tensor, dim: int = -1, dtype: torch.dtype = None):
