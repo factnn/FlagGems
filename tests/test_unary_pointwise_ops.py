@@ -1535,6 +1535,7 @@ def test_accuracy_rrelu_with_noise_backward(shape, dtype):
         res_out = torch.ops.aten.rrelu_with_noise_backward(
             grad_output, inp, noise, lower, upper, True, False
         )
+    gems_assert_close(res_out, ref_out, dtype)
 
 
 @pytest.mark.logit
